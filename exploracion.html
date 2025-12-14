@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exploración - Parque Nacional El Cusuco</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Configuración personalizada -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: { 50: '#ecfdf5', 100: '#d1fae5', 500: '#10b981', 600: '#059669', 700: '#047857', 900: '#064e3b' },
+                        stone: { 50: '#fafaf9', 100: '#f5f5f4', 800: '#292524', 900: '#1c1917' }
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Montserrat', sans-serif; }
+        
+        /* Estilos Sidebar Colapsado */
+        #sidebar.collapsed { width: 5rem; }
+        #sidebar.collapsed .hide-on-collapse { display: none; opacity: 0; pointer-events: none; }
+        #sidebar.collapsed .nav-item { justify-content: center; padding-left: 0; padding-right: 0; }
+        #sidebar.collapsed .nav-icon { margin-right: 0; }
+        
+        /* CORRECCIÓN: Estilos específicos para la mascota al colapsar */
+        #sidebar.collapsed .logo-container { padding-left: 0; padding-right: 0; justify-content: center; }
+        #sidebar.collapsed .logo-icon { margin-right: 0; height: 3rem; width: auto; }
+        
+        /* Estilos Tabs */
+        .tab-btn {
+            position: relative;
+            overflow: hidden;
+        }
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background-color: #059669;
+            transition: width 0.3s ease;
+        }
+        .tab-btn.active::after { width: 100%; }
+        .tab-btn.active { color: #059669; background-color: #ecfdf5; }
+
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-[#f8fafc] text-stone-800 h-screen overflow-hidden flex selection:bg-emerald-200">
+
+    <!-- 1. SIDEBAR -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-72 bg-[#1c1917] text-stone-300 transform -translate-x-full transition-all duration-300 ease-in-out md:relative md:translate-x-0 flex flex-col shadow-2xl border-r border-stone-800">
+        <button onclick="toggleSidebar()" class="hidden md:flex absolute -right-3 top-24 bg-emerald-600 text-white p-1 rounded-full shadow-lg hover:bg-emerald-500 transition-colors z-50 border border-emerald-700 hover:scale-110">
+            <i data-lucide="chevron-left" id="toggle-icon" class="h-4 w-4 transition-transform duration-300"></i>
+        </button>
+
+        <!-- Contenedor del Logo -->
+        <div class="h-32 flex items-center px-6 border-b border-stone-800/50 logo-container transition-all">
+            <div class="relative flex items-center justify-center shrink-0">
+                <div class="absolute inset-0 bg-emerald-500/20 blur-xl rounded-full animate-pulse-slow"></div>
+                <!-- Mascota Cusquito -->
+                <img src="https://www.dropbox.com/scl/fi/njwz6enhkgn6bf26qi4pz/Dise-o_sin_t-tulo_V2.gif?rlkey=4w45c9c9dpi4i1j7jvi08geu8&st=ypparvdj&raw=1" alt="Logo Cusquito" class="relative h-20 w-auto object-contain mr-3 logo-icon transition-all hover:scale-110 cursor-pointer">
+            </div>
+            <div class="hide-on-collapse transition-opacity duration-200">
+                <h1 class="font-bold text-lg leading-tight tracking-wide text-white">EL CUSUCO</h1>
+                <p class="text-[10px] text-emerald-500 font-bold tracking-[0.2em] uppercase">Parque Nacional</p>
+            </div>
+        </div>
+
+        <nav class="flex-1 py-8 space-y-2 px-3 overflow-y-auto scrollbar-hide">
+            <a href="index.html" class="nav-item w-full flex items-center px-4 py-3.5 rounded-xl hover:bg-white/5 text-stone-400 hover:text-white transition-all group">
+                <i data-lucide="layout-grid" class="h-5 w-5 mr-3 nav-icon group-hover:text-emerald-400 transition-colors"></i>
+                <span class="font-medium hide-on-collapse whitespace-nowrap">Inicio</span>
+            </a>
+            
+            <div class="hide-on-collapse px-4 pb-3 text-[10px] font-bold text-stone-600 uppercase tracking-widest transition-opacity duration-200">Explorar</div>
+            
+            <a href="#" class="nav-item w-full flex items-center px-4 py-3.5 rounded-xl bg-white/5 text-white transition-all group border-l-4 border-emerald-500 shadow-inner">
+                <i data-lucide="compass" class="h-5 w-5 mr-3 nav-icon text-emerald-400 transition-colors animate-pulse"></i>
+                <span class="font-medium hide-on-collapse whitespace-nowrap">Exploración</span>
+            </a>
+            <a href="campana.html" class="nav-item w-full flex items-center px-4 py-3.5 rounded-xl text-stone-400 hover:bg-white/5 hover:text-white transition-all group">
+                <i data-lucide="megaphone" class="h-5 w-5 mr-3 nav-icon group-hover:text-emerald-400 transition-colors"></i>
+                <span class="font-medium hide-on-collapse whitespace-nowrap">Campaña</span>
+            </a>
+            <a href="recurso.html" class="nav-item w-full flex items-center px-4 py-3.5 rounded-xl text-stone-400 hover:bg-white/5 hover:text-white transition-all group">
+                <i data-lucide="book-open" class="h-5 w-5 mr-3 nav-icon group-hover:text-emerald-400 transition-colors"></i>
+                <span class="font-medium hide-on-collapse whitespace-nowrap">Recurso</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Overlay Móvil -->
+    <div id="overlay" onclick="toggleMobileMenu()" class="fixed inset-0 bg-stone-900/80 z-40 hidden md:hidden backdrop-blur-md transition-opacity"></div>
+
+    <!-- 2. CONTENIDO PRINCIPAL -->
+    <div class="flex-1 flex flex-col h-screen overflow-hidden relative w-full bg-[#f8fafc]">
+        
+        <button onclick="toggleMobileMenu()" class="md:hidden absolute top-6 left-6 z-40 p-3 bg-white/80 backdrop-blur-md text-stone-600 hover:bg-white rounded-full shadow-lg border border-stone-200 transition-all hover:scale-110">
+            <i data-lucide="menu" class="h-6 w-6"></i>
+        </button>
+
+        <!-- Barra de Navegación Interna (Tabs) -->
+        <div class="bg-white border-b border-stone-200 px-8 pt-4 sticky top-0 z-30 shadow-sm flex overflow-x-auto gap-2">
+            <button onclick="switchSection('historia')" class="tab-btn active px-6 py-4 font-bold text-sm text-stone-500 hover:text-emerald-600 transition-colors whitespace-nowrap flex items-center gap-2" id="tab-historia">
+                <i data-lucide="leaf" class="h-4 w-4"></i> Historia & Bio
+            </button>
+            <button onclick="switchSection('actividades')" class="tab-btn px-6 py-4 font-bold text-sm text-stone-500 hover:text-emerald-600 transition-colors whitespace-nowrap flex items-center gap-2" id="tab-actividades">
+                <i data-lucide="compass" class="h-4 w-4"></i> Actividades
+            </button>
+            <button onclick="switchSection('observaciones')" class="tab-btn px-6 py-4 font-bold text-sm text-stone-500 hover:text-emerald-600 transition-colors whitespace-nowrap flex items-center gap-2" id="tab-observaciones">
+                <i data-lucide="clipboard-check" class="h-4 w-4"></i> Auditoría
+            </button>
+            <button onclick="switchSection('perfiles')" class="tab-btn px-6 py-4 font-bold text-sm text-stone-500 hover:text-emerald-600 transition-colors whitespace-nowrap flex items-center gap-2" id="tab-perfiles">
+                <i data-lucide="users" class="h-4 w-4"></i> Perfiles
+            </button>
+            <button onclick="switchSection('mapa')" class="tab-btn px-6 py-4 font-bold text-sm text-stone-500 hover:text-emerald-600 transition-colors whitespace-nowrap flex items-center gap-2" id="tab-mapa">
+                <i data-lucide="map-pin" class="h-4 w-4"></i> Mapa Interactivo
+            </button>
+        </div>
+
+        <main class="flex-1 overflow-y-auto scroll-smooth p-6 md:p-10 bg-gradient-to-br from-[#f8fafc] to-[#e2e8f0]">
+
+            <!-- SECCIÓN 1: HISTORIA Y BIO (Renovada) -->
+            <div id="section-historia" class="content-section animate-fade-in-up max-w-6xl mx-auto space-y-8">
+                
+                <!-- Hero Image con Texto Flotante -->
+                <div class="relative rounded-[2rem] overflow-hidden h-[400px] shadow-2xl group cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1542224566-6e85f2e6772f?q=80&w=1888&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Bosque Nuboso">
+                    <div class="absolute inset-0 bg-gradient-to-t from-stone-900 via-stone-900/40 to-transparent flex flex-col justify-end p-8 md:p-12">
+                        <div class="transform transition-transform duration-500 group-hover:-translate-y-2">
+                            <span class="bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-4 inline-block shadow-lg">Joya Natural</span>
+                            <h2 class="text-4xl md:text-6xl font-extrabold text-white mb-2 leading-tight">El Cusuco</h2>
+                            <p class="text-emerald-100 text-lg md:text-xl font-medium max-w-2xl">Un santuario de vida en la Cordillera del Merendón, guardián de especies únicas en el mundo.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grid de Información Clave -->
+                <div class="grid md:grid-cols-3 gap-6">
+                    <!-- Historia Card -->
+                    <div class="bg-white p-8 rounded-[2rem] shadow-lg border border-stone-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <i data-lucide="scroll" class="w-24 h-24 text-stone-400"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-stone-800 mb-4 flex items-center gap-2">
+                            <span class="w-8 h-8 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-sm"><i data-lucide="history" class="w-4 h-4"></i></span>
+                            Origen
+                        </h3>
+                        <p class="text-stone-600 leading-relaxed mb-4">
+                            Declarado área protegida en <strong class="text-orange-600">1987</strong> (Decreto 87-87). Su nombre honra a los <span class="italic font-semibold">Cusucos</span> (armadillos) que poblaban históricamente la zona.
+                        </p>
+                        <div class="bg-orange-50 rounded-xl p-3 text-xs text-orange-800 font-medium">
+                            <i data-lucide="info" class="w-3 h-3 inline mr-1"></i> Dato curioso: Es vital para el agua de SPS.
+                        </div>
+                    </div>
+
+                    <!-- Ubicación Card -->
+                    <div class="bg-white p-8 rounded-[2rem] shadow-lg border border-stone-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group">
+                         <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <i data-lucide="map" class="w-24 h-24 text-blue-400"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-stone-800 mb-4 flex items-center gap-2">
+                            <span class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-sm"><i data-lucide="map-pin" class="w-4 h-4"></i></span>
+                            Ubicación
+                        </h3>
+                        <ul class="space-y-3 text-stone-600">
+                            <li class="flex items-start gap-2"><i data-lucide="arrow-right" class="w-4 h-4 text-blue-500 mt-1"></i> A 20km Oeste de San Pedro Sula.</li>
+                            <li class="flex items-start gap-2"><i data-lucide="arrow-right" class="w-4 h-4 text-blue-500 mt-1"></i> Altura Máx: <strong class="text-stone-800">2,242 msnm</strong>.</li>
+                            <li class="flex items-start gap-2"><i data-lucide="arrow-right" class="w-4 h-4 text-blue-500 mt-1"></i> Zona Núcleo: 10 km.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Clima Widget -->
+                    <div class="bg-gradient-to-br from-blue-500 to-cyan-600 p-8 rounded-[2rem] shadow-lg text-white relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="absolute -right-4 -top-4 animate-float">
+                            <i data-lucide="cloud-rain" class="w-32 h-32 text-white/20"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-6 flex items-center gap-2 relative z-10">
+                            <i data-lucide="thermometer" class="w-5 h-5"></i> Clima
+                        </h3>
+                        <div class="flex items-baseline gap-2 mb-2 relative z-10">
+                            <span class="text-6xl font-extrabold">19°</span>
+                            <span class="text-xl font-medium opacity-80">C</span>
+                        </div>
+                        <p class="text-blue-100 font-medium relative z-10 mb-4">Promedio Anual</p>
+                        <div class="bg-white/20 backdrop-blur-sm rounded-xl p-3 text-sm relative z-10 border border-white/30">
+                            "Neblina mística y llovizna frecuente. ¡Lleva abrigo!"
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección Biodiversidad Interactiva (CORREGIDA) -->
+                <div>
+                    <h3 class="text-3xl font-bold text-stone-800 mb-6 flex items-center gap-3">
+                        <i data-lucide="leaf" class="text-emerald-600 fill-current"></i> Tesoros Vivos
+                    </h3>
+                    
+                    <!-- Grid Principal -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                        <!-- Animal 1: Quetzal (Imagen Personalizada) -->
+                        <div class="group relative rounded-2xl overflow-hidden h-64 cursor-pointer shadow-md hover:shadow-xl transition-all bg-stone-200">
+                            <img src="data:image/jpeg;base64,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" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Quetzal">
+                            <div class="absolute inset-0 bg-gradient-to-t from-stone-900 via-stone-900/40 to-transparent opacity-90"></div>
+                            <div class="absolute bottom-0 left-0 p-5 w-full">
+                                <h4 class="text-white font-bold text-xl mb-1">Quetzal</h4>
+                                <p class="text-emerald-300 text-sm font-medium">Ave sagrada emblemática.</p>
+                            </div>
+                        </div>
+
+                        <!-- Animal 2: Jaguar (Enlace Actualizado) -->
+                        <div class="group relative rounded-2xl overflow-hidden h-64 cursor-pointer shadow-md hover:shadow-xl transition-all bg-stone-200">
+                            <img src="https://images.unsplash.com/photo-1615233162799-a8dfc207b6b1?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Jaguar">
+                            <div class="absolute inset-0 bg-gradient-to-t from-stone-900 via-stone-900/40 to-transparent opacity-90"></div>
+                            <div class="absolute bottom-0 left-0 p-5 w-full">
+                                <h4 class="text-white font-bold text-xl mb-1">Jaguar</h4>
+                                <p class="text-orange-300 text-sm font-medium">El felino más grande.</p>
+                            </div>
+                        </div>
+
+                        <!-- Animal 3: Tapir (Enlace Actualizado) -->
+                        <div class="group relative rounded-2xl overflow-hidden h-64 cursor-pointer shadow-md hover:shadow-xl transition-all bg-stone-200">
+                            <img src="https://images.unsplash.com/photo-1579567994692-0b73c44237d1?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Tapir">
+                            <div class="absolute inset-0 bg-gradient-to-t from-stone-900 via-stone-900/40 to-transparent opacity-90"></div>
+                            <div class="absolute bottom-0 left-0 p-5 w-full">
+                                <h4 class="text-white font-bold text-xl mb-1">Tapir</h4>
+                                <p class="text-stone-300 text-sm font-medium">En peligro de extinción.</p>
+                            </div>
+                        </div>
+
+                        <!-- Stats Bio (Mejorada) -->
+                        <div class="bg-stone-900 rounded-2xl p-6 flex flex-col justify-center items-center text-center shadow-md h-64 border border-stone-800 relative overflow-hidden">
+                            <i data-lucide="bar-chart-2" class="absolute -right-4 -bottom-4 w-32 h-32 text-stone-800 opacity-50"></i>
+                            <div class="relative z-10">
+                                <div class="text-6xl font-bold text-emerald-500 mb-2">29</div>
+                                <p class="text-stone-300 font-bold mb-4">Especies de Anfibios</p>
+                                <div class="w-12 h-1 bg-stone-700 mx-auto mb-4 rounded-full"></div>
+                                <p class="text-stone-500 text-xs px-2">6 únicas en el mundo y +70 tipos de murciélagos.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fila Adicional: Flora e Insectos (Versión Discreta y Elegante) -->
+                    <div class="bg-emerald-50/60 rounded-2xl p-6 border border-emerald-100 flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left shadow-sm">
+                        
+                        <!-- Iconos Discretos -->
+                        <div class="bg-white p-4 rounded-full shadow-sm text-emerald-600 shrink-0 flex items-center justify-center gap-2">
+                            <i data-lucide="sprout" class="w-5 h-5"></i>
+                            <div class="w-px h-4 bg-emerald-100"></div>
+                            <i data-lucide="bug" class="w-5 h-5 text-emerald-500"></i>
+                        </div>
+
+                        <!-- Texto Informativo -->
+                        <div class="flex-1">
+                            <h4 class="font-bold text-stone-800 mb-1 text-base">Un Paisaje Prehistórico</h4>
+                            <p class="text-sm text-stone-600 leading-relaxed">
+                                El bosque alberga <span class="font-semibold text-emerald-700">Helechos Gigantes</span> que superan los 20 metros de altura y es el hogar de joyas vivientes como los <span class="font-semibold text-emerald-700">Escarabajos Gema</span>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 2: ACTIVIDADES (Tarjetas Visuales) -->
+            <div id="section-actividades" class="content-section hidden animate-fade-in-up max-w-7xl mx-auto">
+                <h2 class="text-3xl font-bold text-stone-800 mb-8">Experiencias Inolvidables</h2>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Card 1: Senderismo -->
+                    <div class="group h-[400px] perspective-1000">
+                        <div class="relative w-full h-full transition-all duration-500 transform border border-stone-200 rounded-[2rem] overflow-hidden hover:shadow-2xl">
+                            <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?q=80&w=1000&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Senderismo">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+                            
+                            <div class="absolute bottom-0 left-0 p-6 w-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                                <div class="w-12 h-12 bg-orange-500 text-white rounded-full flex items-center justify-center mb-4 shadow-lg">
+                                    <i data-lucide="footprints" class="w-6 h-6"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold text-white mb-2">Senderismo</h3>
+                                <p class="text-stone-300 text-sm mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
+                                    Rutas épicas como Cascada Quetzal (4km) y El Pizote. Explora la selva virgen.
+                                </p>
+                                <button class="text-orange-400 font-bold text-sm uppercase tracking-wide flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity delay-200">
+                                    Ver rutas <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Aviturismo -->
+                    <div class="group h-[400px]">
+                        <div class="relative w-full h-full transition-all duration-500 border border-stone-200 rounded-[2rem] overflow-hidden hover:shadow-2xl">
+                            <img src="https://images.unsplash.com/photo-1452570053594-1b985d6ea890?q=80&w=1000&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Aves">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+                            <div class="absolute bottom-0 left-0 p-6 w-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                                <div class="w-12 h-12 bg-sky-500 text-white rounded-full flex items-center justify-center mb-4 shadow-lg">
+                                    <i data-lucide="binoculars" class="w-6 h-6"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold text-white mb-2">Aviturismo</h3>
+                                <p class="text-stone-300 text-sm mb-4 opacity-0 group-hover:opacity-100 transition-opacity delay-100">
+                                    Paraíso para observar Quetzales, Tucanes y Jilgueros en libertad.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Fotografía -->
+                    <div class="group h-[400px]">
+                        <div class="relative w-full h-full transition-all duration-500 border border-stone-200 rounded-[2rem] overflow-hidden hover:shadow-2xl">
+                            <img src="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?q=80&w=1000&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Fotografía">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+                            <div class="absolute bottom-0 left-0 p-6 w-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                                <div class="w-12 h-12 bg-purple-500 text-white rounded-full flex items-center justify-center mb-4 shadow-lg">
+                                    <i data-lucide="camera" class="w-6 h-6"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold text-white mb-2">Fotografía</h3>
+                                <p class="text-stone-300 text-sm mb-4 opacity-0 group-hover:opacity-100 transition-opacity delay-100">
+                                    Captura la magia de la niebla, cascadas cristalinas y macro naturaleza.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Café -->
+                    <div class="group h-[400px]">
+                        <div class="relative w-full h-full transition-all duration-500 border border-stone-200 rounded-[2rem] overflow-hidden hover:shadow-2xl">
+                            <img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=1000&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Café">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+                            <div class="absolute bottom-0 left-0 p-6 w-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                                <div class="w-12 h-12 bg-amber-600 text-white rounded-full flex items-center justify-center mb-4 shadow-lg">
+                                    <i data-lucide="coffee" class="w-6 h-6"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold text-white mb-2">Ruta del Café</h3>
+                                <p class="text-stone-300 text-sm mb-4 opacity-0 group-hover:opacity-100 transition-opacity delay-100">
+                                    Visita fincas de altura y degusta el mejor café cultivado bajo sombra.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 bg-stone-900 text-stone-300 p-6 rounded-2xl flex items-center justify-between border border-stone-700">
+                    <div class="flex items-center gap-4">
+                        <div class="bg-stone-800 p-3 rounded-lg"><i data-lucide="car" class="h-6 w-6 text-emerald-400"></i></div>
+                        <div>
+                            <h4 class="font-bold text-white">¿Cómo llegar?</h4>
+                            <p class="text-sm">Acceso desde San Pedro Sula. Se requiere 4x4.</p>
+                        </div>
+                    </div>
+                    <button class="bg-white text-stone-900 px-4 py-2 rounded-lg font-bold text-sm hover:bg-emerald-400 transition-colors">Ver Mapa</button>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 3: OBSERVACIONES (Visual VS) -->
+            <div id="section-observaciones" class="content-section hidden animate-fade-in-up max-w-5xl mx-auto">
+                <h2 class="text-3xl font-bold text-stone-800 mb-8 text-center">Auditoría de Experiencia</h2>
+                
+                <div class="grid md:grid-cols-2 gap-8 relative">
+                    <!-- Línea divisoria central (Decorativa) -->
+                    <div class="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-stone-200 transform -translate-x-1/2"></div>
+                    <div class="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-white border border-stone-200 rounded-full items-center justify-center font-bold text-stone-400 z-10">VS</div>
+
+                    <!-- Columna Dolor -->
+                    <div class="space-y-4">
+                        <div class="bg-red-50 p-4 rounded-xl text-center mb-6">
+                            <h3 class="text-xl font-bold text-red-700 flex items-center justify-center gap-2">
+                                <i data-lucide="alert-triangle" class="h-5 w-5"></i> Desafíos
+                            </h3>
+                        </div>
+                        <!-- Items -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-red-400 hover:shadow-md transition-all">
+                            <h4 class="font-bold text-stone-800 text-sm mb-1">Señalización Limitada</h4>
+                            <p class="text-xs text-stone-500">Falta info en rutas. Se depende mucho de guías.</p>
+                            <div class="w-full bg-red-100 h-1.5 mt-3 rounded-full"><div class="bg-red-400 h-1.5 rounded-full w-1/4"></div></div>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-red-400 hover:shadow-md transition-all">
+                            <h4 class="font-bold text-stone-800 text-sm mb-1">Acceso 4x4</h4>
+                            <p class="text-xs text-stone-500">Carreteras difíciles para vehículos sedán.</p>
+                            <div class="w-full bg-red-100 h-1.5 mt-3 rounded-full"><div class="bg-red-400 h-1.5 rounded-full w-3/4"></div></div>
+                        </div>
+                    </div>
+
+                    <!-- Columna Placer -->
+                    <div class="space-y-4">
+                        <div class="bg-emerald-50 p-4 rounded-xl text-center mb-6">
+                            <h3 class="text-xl font-bold text-emerald-700 flex items-center justify-center gap-2">
+                                <i data-lucide="star" class="h-5 w-5"></i> Fortalezas
+                            </h3>
+                        </div>
+                        <!-- Items -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-emerald-400 hover:shadow-md transition-all">
+                            <h4 class="font-bold text-stone-800 text-sm mb-1">Paisajes Épicos</h4>
+                            <p class="text-xs text-stone-500">Vistas panorámicas, cascadas y campos de flores.</p>
+                             <div class="w-full bg-emerald-100 h-1.5 mt-3 rounded-full"><div class="bg-emerald-400 h-1.5 rounded-full w-full"></div></div>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-emerald-400 hover:shadow-md transition-all">
+                            <h4 class="font-bold text-stone-800 text-sm mb-1">Calidez Local</h4>
+                            <p class="text-xs text-stone-500">Comunidad amigable y segura.</p>
+                             <div class="w-full bg-emerald-100 h-1.5 mt-3 rounded-full"><div class="bg-emerald-400 h-1.5 rounded-full w-11/12"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 4: PERFILES (Cards Estilo RPG) -->
+            <div id="section-perfiles" class="content-section hidden animate-fade-in-up max-w-6xl mx-auto">
+                <h2 class="text-3xl font-bold text-stone-800 mb-8">Elige tu Aventura</h2>
+                
+                <div class="grid md:grid-cols-4 gap-6">
+                    <!-- Perfil 1: Familias -->
+                    <div class="bg-white rounded-[2rem] p-6 shadow-lg border border-stone-100 hover:-translate-y-2 transition-transform duration-300 group">
+                        <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform">
+                            <i data-lucide="users-round" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="font-bold text-lg text-stone-800">Familias</h3>
+                        <div class="flex gap-2 mt-2 mb-4">
+                            <span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase rounded">Seguridad</span>
+                            <span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase rounded">Relax</span>
+                        </div>
+                        <p class="text-xs text-stone-500 leading-relaxed">
+                            Buscan conectar sin riesgos. Rutas fáciles y picnics.
+                        </p>
+                    </div>
+
+                    <!-- Perfil 2: Deportistas -->
+                    <div class="bg-white rounded-[2rem] p-6 shadow-lg border border-stone-100 hover:-translate-y-2 transition-transform duration-300 group">
+                        <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform">
+                            <i data-lucide="mountain" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="font-bold text-lg text-stone-800">Deportistas</h3>
+                        <div class="flex gap-2 mt-2 mb-4">
+                            <span class="px-2 py-0.5 bg-blue-50 text-blue-700 text-[10px] font-bold uppercase rounded">Reto</span>
+                            <span class="px-2 py-0.5 bg-blue-50 text-blue-700 text-[10px] font-bold uppercase rounded">Físico</span>
+                        </div>
+                        <p class="text-xs text-stone-500 leading-relaxed">
+                            Trail running y senderos de alta dificultad.
+                        </p>
+                    </div>
+
+                    <!-- Perfil 3: Creators -->
+                    <div class="bg-white rounded-[2rem] p-6 shadow-lg border border-stone-100 hover:-translate-y-2 transition-transform duration-300 group">
+                        <div class="w-16 h-16 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform">
+                            <i data-lucide="camera" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="font-bold text-lg text-stone-800">Creators</h3>
+                        <div class="flex gap-2 mt-2 mb-4">
+                            <span class="px-2 py-0.5 bg-purple-50 text-purple-700 text-[10px] font-bold uppercase rounded">Visual</span>
+                            <span class="px-2 py-0.5 bg-purple-50 text-purple-700 text-[10px] font-bold uppercase rounded">Viral</span>
+                        </div>
+                        <p class="text-xs text-stone-500 leading-relaxed">
+                            Cazadores del "shot" perfecto para redes sociales.
+                        </p>
+                    </div>
+
+                    <!-- Perfil 4: Explorador -->
+                    <div class="bg-white rounded-[2rem] p-6 shadow-lg border border-stone-100 hover:-translate-y-2 transition-transform duration-300 group">
+                        <div class="w-16 h-16 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform">
+                            <i data-lucide="compass" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="font-bold text-lg text-stone-800">Explorador</h3>
+                        <div class="flex gap-2 mt-2 mb-4">
+                            <span class="px-2 py-0.5 bg-orange-50 text-orange-700 text-[10px] font-bold uppercase rounded">Cultura</span>
+                            <span class="px-2 py-0.5 bg-orange-50 text-orange-700 text-[10px] font-bold uppercase rounded">Bio</span>
+                        </div>
+                        <p class="text-xs text-stone-500 leading-relaxed">
+                            Turista internacional amante de la biodiversidad auténtica.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 5: MAPA (Moderno) -->
+            <div id="section-mapa" class="content-section hidden animate-fade-in-up max-w-6xl mx-auto">
+                <div class="flex flex-col md:flex-row justify-between items-end mb-8">
+                    <div>
+                        <h2 class="text-3xl font-bold text-stone-800">Mapa de Rutas</h2>
+                        <p class="text-stone-500 mt-2">Encuentra tu camino ideal según tu estilo.</p>
+                    </div>
+                    <div class="flex gap-2 mt-4 md:mt-0 p-1 bg-stone-100 rounded-xl">
+                        <!-- Botones de Filtro JS -->
+                        <button onclick="updateMap('familias')" class="map-filter-btn px-4 py-2 text-xs font-bold rounded-lg transition-all active" data-filter="familias">Familia</button>
+                        <button onclick="updateMap('deportistas')" class="map-filter-btn px-4 py-2 text-xs font-bold rounded-lg transition-all" data-filter="deportistas">Deporte</button>
+                        <button onclick="updateMap('influencers')" class="map-filter-btn px-4 py-2 text-xs font-bold rounded-lg transition-all" data-filter="influencers">Foto</button>
+                        <button onclick="updateMap('extranjeros')" class="map-filter-btn px-4 py-2 text-xs font-bold rounded-lg transition-all" data-filter="extranjeros">Global</button>
+                    </div>
+                </div>
+
+                <div id="map-points-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- JS rellena esto -->
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        lucide.createIcons();
+
+        // --- Sidebar Logic ---
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const toggleIcon = document.getElementById('toggle-icon');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('collapsed');
+            toggleIcon.classList.toggle('rotate-180');
+        }
+        function toggleMobileMenu() {
+            const isClosed = sidebar.classList.contains('-translate-x-full');
+            if (isClosed) { sidebar.classList.remove('-translate-x-full'); overlay.classList.remove('hidden'); } 
+            else { closeMobileMenu(); }
+        }
+        function closeMobileMenu() {
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+        }
+
+        // --- Tab Logic ---
+        function switchSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+            document.getElementById('section-' + sectionId).classList.remove('hidden');
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('tab-' + sectionId).classList.add('active');
+            
+            lucide.createIcons();
+        }
+
+        // --- Map Logic ---
+        const mapData = {
+            familias: [
+                { name: "Centro de Visitantes", coords: "15.505800, -88.099200", type: "Seguro", icon: "home" },
+                { name: "Cascada Quetzal", coords: "15.492516, -88.090044", type: "Fácil", icon: "droplet" },
+                { name: "Paseo Hortensias", coords: "15.515560, -88.117466", type: "Relax", icon: "flower" },
+            ],
+            deportistas: [
+                { name: "Alta Montaña", coords: "15.510000, -88.105000", type: "Extremo", icon: "mountain" },
+                { name: "Trail Running", coords: "15.506800, -88.101500", type: "Run", icon: "activity" },
+                { name: "Camping Zona", coords: "15.507600, -88.103900", type: "Camp", icon: "tent" }
+            ],
+            influencers: [
+                { name: "Campos Hortensias", coords: "15.515560, -88.117466", type: "Viral", icon: "camera" },
+                { name: "Mirador Nubes", coords: "15.509300, -88.104100", type: "Vistas", icon: "eye" },
+                { name: "Cafeterías", coords: "15.525400, -88.125600", type: "Aesthetic", icon: "coffee" }
+            ],
+            extranjeros: [
+                { name: "Avistamiento Quetzal", coords: "15.498700, -88.094800", type: "Bio", icon: "binoculars" },
+                { name: "Tour de Café", coords: "15.530000, -88.130000", type: "Cultural", icon: "coffee" },
+                { name: "Cascada Tucán", coords: "15.501900, -88.095300", type: "Naturaleza", icon: "droplet" }
+            ]
+        };
+
+        function updateMap(profile) {
+            const container = document.getElementById('map-points-container');
+            container.innerHTML = ''; 
+            
+            // Estilos de botones
+            document.querySelectorAll('.map-filter-btn').forEach(btn => {
+                btn.className = 'map-filter-btn px-4 py-2 text-xs font-bold rounded-lg transition-all bg-white text-stone-500 hover:bg-stone-50';
+            });
+            const activeBtn = document.querySelector(`button[data-filter="${profile}"]`);
+            activeBtn.className = 'map-filter-btn px-4 py-2 text-xs font-bold rounded-lg transition-all bg-emerald-500 text-white shadow-lg transform scale-105';
+
+            // Generar tarjetas
+            const points = mapData[profile];
+            points.forEach((point, index) => {
+                const card = document.createElement('div');
+                card.className = `bg-white p-5 rounded-2xl border border-stone-100 shadow-sm hover:shadow-lg transition-all flex justify-between items-center group animate-fade-in-up`;
+                card.style.animationDelay = `${index * 100}ms`;
+                
+                card.innerHTML = `
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center">
+                            <i data-lucide="${point.icon}" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <span class="text-[10px] uppercase font-bold text-emerald-500 tracking-wider block">${point.type}</span>
+                            <h4 class="font-bold text-stone-800 text-sm">${point.name}</h4>
+                        </div>
+                    </div>
+                    <a href="https://www.google.com/maps/search/?api=1&query=${point.coords}" target="_blank" class="p-2 bg-stone-50 text-stone-400 rounded-lg group-hover:bg-emerald-500 group-hover:text-white transition-colors" title="Ver en Mapa">
+                        <i data-lucide="map-pin" class="h-5 w-5"></i>
+                    </a>
+                `;
+                container.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        // Init
+        updateMap('familias');
+    </script>
+</body>
+</html>
